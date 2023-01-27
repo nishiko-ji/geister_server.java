@@ -1,9 +1,9 @@
 # 大会用にAI名の設定、表示機能とタイマーの表示機能を追加します（途中）
 ## 追加予定機能メモ
-- AI名を設定できる
+- サーバー起動時に --add_player_name でAI名を設定できる
 - AI名をviewerで見れる
-- 残り時間をviewerで見れる
 - ログ名にAI名を追加する
+- 残り時間をviewerで見れる
 
 # geister_server (Java version)
 
