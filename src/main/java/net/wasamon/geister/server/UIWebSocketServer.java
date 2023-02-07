@@ -17,13 +17,31 @@ public class UIWebSocketServer {
 	private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 	
 	public static String mesg = "null";
+	public static String time = "null";
+	public static String name = "null";
 	
 	synchronized static void setMesg(String mesg){
 		UIWebSocketServer.mesg = mesg;
 	}
 
+	synchronized static void setTime(String time){
+		UIWebSocketServer.time = time;
+	}
+
+	synchronized static void setName(String name){
+		UIWebSocketServer.name = name;
+	}
+
 	synchronized static String getMesg(){
 		return UIWebSocketServer.mesg;
+	}
+
+	synchronized static String getTime(){
+		return UIWebSocketServer.time;
+	}
+
+	synchronized static String getName(){
+		return UIWebSocketServer.name;
 	}
 
 	static {
@@ -43,8 +61,10 @@ public class UIWebSocketServer {
 
 	public static void broadcast() {
 		String mesg = getMesg();
+		String time = getTime();
+		String name = getName();
 		sessions.forEach(session -> {
-            session.getAsyncRemote().sendText(mesg);
+            session.getAsyncRemote().sendText(mesg + ',' + time + ',' + name);
 		});
 	}
 }

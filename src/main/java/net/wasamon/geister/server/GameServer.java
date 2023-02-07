@@ -24,6 +24,7 @@ public class GameServer {
     
     private final File logDir = new File("./log");
 	private final boolean NG_TERMINATE;
+  private final boolean SET_PLAYER_NAME;
     
     private FileOutputStream log;
     private PrintWriter logWriter;
@@ -40,10 +41,14 @@ public class GameServer {
 	private boolean[] init_flags;
 	private int turn_counter = 0;
 
-	public GameServer(boolean ng_terminate, int max_turn) {
+  private String[] names = {"PLAYER_0", "PLAYER_1"};
+
+	public GameServer(boolean ng_terminate, boolean set_player_name, int max_turn) {
 		this.NG_TERMINATE = ng_terminate;
+    this.SET_PLAYER_NAME = set_player_name;
 		this.max_turn = max_turn;
 		System.out.println("NG_TERMIATE=" + NG_TERMINATE);
+		System.out.println("SET_PLAYER_NAME=" + SET_PLAYER_NAME);
 	    if(logDir.exists() == false){
 	        logDir.mkdir();
 	    }
@@ -56,6 +61,18 @@ public class GameServer {
 	public STATE getState() {
 		return state;
 	}
+
+  public void setName(String name, int pid) {
+    if(pid == 0) {
+      names[0] = name;
+    } else {
+      names[1] = name;
+    }
+  }
+
+  public String getName(int pid) {
+    return names[pid];
+  }
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
     public void init() {
@@ -86,7 +103,7 @@ public class GameServer {
     private PrintWriter getLogFile(){
         if(logWriter != null)
             return logWriter;
-        String path = "log-" + sdf.format(Calendar.getInstance().getTime()) + ".txt";
+        String path = "log-" + sdf.format(Calendar.getInstance().getTime()) + '_' + names[0] + '_' + names[1] + ".txt";
         try{
             log = new FileOutputStream(new File(logDir, path));
             logWriter = new PrintWriter(log, true);
@@ -104,6 +121,7 @@ public class GameServer {
         return lastTakenItem.getColor() == ItemColor.RED ? "R" : "B";
     }
     
+	private Pattern SET_NAME = Pattern.compile("^NAME:(\\w*)");
 	private Pattern SET_COMMAND = Pattern.compile("^SET:(\\w*)");
 	private Pattern MOVE_COMMAND = Pattern.compile("^MOV:(\\w*),(\\w*)");
 	/**
@@ -119,9 +137,21 @@ public class GameServer {
 		System.out.println("receive: " + mesg);
 		getLogFile().println("player=" + pid + "," + mesg);
 		boolean flag = false;
+    Matcher m, n;
+    String[] ary;
 		lastTakenItem = null;
 		if (state == STATE.WAIT_FOR_INITIALIZATION) {
-			Matcher m = SET_COMMAND.matcher(mesg);
+      if (SET_PLAYER_NAME) {
+        String ary[] = mesg.split(',');
+        m = SET_COMMAND.matcher(ary[0]);
+        n = SET_COMMAND.matcher(ary[1]);
+        if(n.matches()){
+          setName(n.group(1), pid);
+        }
+      } else {
+			  m = SET_COMMAND.matcher(mesg);
+      }
+			// Matcher m = SET_COMMAND.matcher(mesg);
 			if (m.matches() && m.group(1).length() == 4 && init_flags[pid] == false) {
 				board.getPlayer(pid).setItemsColor("ABCDEFGH", ItemColor.BLUE); // clear
 				board.getPlayer(pid).setItemsColor(m.group(1).toUpperCase(), ItemColor.RED);

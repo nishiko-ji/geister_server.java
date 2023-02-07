@@ -130,6 +130,14 @@ public abstract class BasePlayer {
 		return !isFailed(recv());
     }
 	
+    public boolean setRedItemsAndName(String keys, String name) throws IOException{
+		if(keys.length() != 4){
+			return false;
+		}
+		send("SET:" + keys + ",Name:" + name + "\r\n");
+		return !isFailed(recv());
+    }
+
     public boolean move(String key, Direction dir) throws IOException{
 		if(isEnded() == false){
 			send("MOV:" + key + "," + dir + "\r\n");

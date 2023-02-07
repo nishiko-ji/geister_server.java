@@ -11,6 +11,8 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Calendar;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import org.glassfish.tyrus.server.Server;
 
@@ -45,6 +47,7 @@ public class TCPServerWithBlock {
 	}
 
 	public void start() throws IOException{
+		UIWebSocketServer.setName("Name0:" + server.getName(0) + ",Name1:" + server.getName(1)); // as global viewer mode
 		players[0] = new ServerThread(server, Constant.PLAYER_1st_PORT, budget);
 		players[1] = new ServerThread(server, Constant.PLAYER_2nd_PORT, budget);
 		players[0].start();
@@ -237,7 +240,7 @@ public class TCPServerWithBlock {
 				send(players[0].ch, "MOV?" + game.getEncodedBoard(0) + "\r\n");
 				players[0].turnStart = Calendar.getInstance().getTimeInMillis();
 				int w = players[0].budget <= 0 ? waitTime : players[0].budget + waitTime;
-				timer = new PlayerTimer(game, players, w, 0);
+				timer = new PlayerTimer(game, players, w, waitTime, 0);
 				timer.start();
 				stateLabel = "MV0:";
 			}
@@ -246,7 +249,7 @@ public class TCPServerWithBlock {
 				send(players[1].ch, "MOV?" + game.getEncodedBoard(1) + "\r\n");
 				players[1].turnStart = Calendar.getInstance().getTimeInMillis();
 				int w = players[1].budget <= 0 ? waitTime : players[1].budget + waitTime;
-				timer = new PlayerTimer(game, players, w, 1);
+				timer = new PlayerTimer(game, players, w, waitTime, 1);
 				timer.start();
 				stateLabel = "MV1:";
 			}
@@ -291,14 +294,16 @@ public class TCPServerWithBlock {
 		private final GameServer game;
 		private final ServerThread[] players;
 		private final int waitTime;
+    private final int byo_yomi;
 		private final int player;
 		
 		private boolean runFlag = false;
 		private boolean timeout = false;
 
-		public PlayerTimer(GameServer game, ServerThread[] players, int waitTime, int player){
+		public PlayerTimer(GameServer game, ServerThread[] players, int waitTime, int byo_yomi, int player){
 			this.game = game;
 			this.waitTime = waitTime;
+      this.byo_yomi = byo_yomi;
 			this.players = players;
 			this.player = player;
 			this.runFlag = false;
@@ -316,6 +321,22 @@ public class TCPServerWithBlock {
 			int t = 0;
 			while(runFlag){
 				try{
+          if(player == 0) {
+            int enemy_budget = players[1].budget >= 0 ? players[1].budget : 0;
+            if(waitTime-byo_yomi <= t) {
+			        UIWebSocketServer.setTime("MJ0:" + 0 + ",MJ1:" + enemy_budget + ",BY0:" + (waitTime-t-1) + ",BY1:" + byo_yomi); // as global viewer mode
+            } else {
+			        UIWebSocketServer.setTime("MJ0:" + (waitTime-byo_yomi-t-1) + ",MJ1:" + enemy_budget + ",BY0:" + byo_yomi + ",BY1:" + byo_yomi); // as global viewer mode
+            }
+          } else {
+            int enemy_budget = players[0].budget >= 0 ? players[0].budget : 0;
+            if(waitTime-byo_yomi <= t) {
+			        UIWebSocketServer.setTime("MJ0:" + enemy_budget + ",MJ1:" + 0 + ",BY0:" + byo_yomi + ",BY1:" + (waitTime-t-1)); // as global viewer mode
+            } else {
+			        UIWebSocketServer.setTime("MJ0:" + enemy_budget + ",MJ1:" + (waitTime-byo_yomi-t-1) + ",BY0:" + byo_yomi + ",BY1:" + byo_yomi); // as global viewer mode
+            }
+
+          }
 					Thread.sleep(1000);
 					if(t >= waitTime){ // timeout
 						runFlag = false;
@@ -352,8 +373,15 @@ public class TCPServerWithBlock {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("TCPSrverWithBlock");
-		GetOpt opt = new GetOpt("", "no_ng_terminate,timeout:,budget:,wait:,max-turn:", args);
+		GetOpt opt = new GetOpt("", "no_ng_terminate,set_player_name_server,set_player_name_client,timeout:,budget:,wait:,max-turn:", args);
 		boolean ng_terminate = !opt.flag("no_ng_terminate");
+
+    boolean set_player_name_server = opt.flag("set_player_name_server");
+    boolean set_player_name_client = opt.flag("set_player_name_client");
+    Scanner scanner = new Scanner(System.in);
+    String n;
+    Pattern illegalFileNamePattern = Pattern.compile("\\\\|/|:|\\*|\\?|\"|<|>|\\|");
+
 		int budget = 10*60; // 10min.
 		if(opt.flag("budget")){
 			budget = Integer.parseInt(opt.getValue("budget"));
@@ -362,18 +390,30 @@ public class TCPServerWithBlock {
 		if(opt.flag("maxturn")){
 			max_turn = Integer.parseInt(opt.getValue("max-turn"));
 		}
-		TCPServerWithBlock s = new TCPServerWithBlock(new GameServer(ng_terminate, max_turn), budget);
+		TCPServerWithBlock s = new TCPServerWithBlock(new GameServer(ng_terminate, set_player_name_client, max_turn), budget);
 		if(opt.flag("timeout")){
 			s.setWaitTime(Integer.parseInt(opt.getValue("timeout")));
 		}
 		if(opt.flag("wait")){
 			waitViewerTime = Integer.parseInt(opt.getValue("wait"));
 		}
+		System.out.println("set_player_name_server = " + set_player_name_server);
+		System.out.println("set_player_name_client = " + set_player_name_client);
 		System.out.println("Budget = " + budget + " sec.");
 		System.out.println("Timeout(after consuming budget) = " + s.getWaitTime() + " sec.");
 		s.webSocketServer.start();
 		while(true){
-            s.server.init();
+      if(set_player_name_server) {
+        System.out.print("SET PLAYER_0 NAME > ");
+        n = scanner.nextLine();
+        n = illegalFileNamePattern.matcher(n).replaceAll("-");
+        s.server.setName(n, 0);
+        System.out.print("SET PLAYER_1 NAME > ");
+        n = scanner.nextLine();
+        n = illegalFileNamePattern.matcher(n).replaceAll("-");
+        s.server.setName(n, 1);
+      }
+      s.server.init();
 			s.start();
 			s.close();
 			s.server.close();

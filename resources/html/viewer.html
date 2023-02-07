@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -9,6 +10,28 @@
       display: block;
       cursor: pointer;
       }
+    .player_info{
+    display: flex;
+    border: solid 1px black;
+    padding: 5px;
+    }
+    .box{
+    border: solid 1px black;
+    vertical-align: middle;
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    }
+    .player_name{
+    background-color: dodgerblue;
+    }
+    .mochi_jikan{
+    background-color: lawngreen;
+    }
+    .byo_yomi{
+    background-color: blueviolet;
+    }
     </style>
     <!--<script src="jquery-2.1.4.min.js"></script>-->
     <script src="jquery.js"></script>
@@ -17,8 +40,20 @@
     <script type="text/javascript" src="jquery.ui.draggable.js"></script>
     <link rel="stylesheet" href="jquery.alerts.css" type="text/css" />  </head>
   <body>
+    <!-- <span id="time"></span> -->
+    <div class="player_info">
+      <div class="box mochi_jikan" id="mochi_jikan0"></div>
+      <div class="box byo_yomi" id="byo_yomi0"></div>
+    </div>
+    <div class="player_name" id="player_name0"></div>
     <canvas id="gameboard"></canvas>
     <input type="checkbox" id="hidden" value="hidden" checked>Hidden Mode</input>
+    <br>
+    <div class="player_name" id="player_name1"></div>
+    <div class="player_info">
+      <div class="box mochi_jikan" id="mochi_jikan1"></div>
+      <div class="box byo_yomi" id="byo_yomi1"></div>
+    </div>
     <br>
     <span id="message"></span>
     <script type="text/javascript">
