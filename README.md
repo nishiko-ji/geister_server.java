@@ -2,7 +2,7 @@
 ガイスターAI大会用にサーバーを改良しました．
 大会と同じ設定でサーバーを起動するには...
 
-        java -jar build/libs/geister.jar --set_player_name_server --budget=600000 --timeout=10000 --wait=1000
+        java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=1000
         
 大会時は恐らく "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
 サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
