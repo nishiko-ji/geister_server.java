@@ -17,8 +17,8 @@ public class UIWebSocketServer {
 	private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 	
 	public static String mesg = "null";
-	public static String time = "null";
-	public static String name = "null";
+	public static String time = "null,null,null,null";
+	public static String name = "null,null";
 	
 	synchronized static void setMesg(String mesg){
 		UIWebSocketServer.mesg = mesg;

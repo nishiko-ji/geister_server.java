@@ -42,6 +42,7 @@ public class GameServer {
 	private int turn_counter = 0;
 
   private String[] names = {"PLAYER_0", "PLAYER_1"};
+  private String[] set_red_mesg = {"", ""};
 
 	public GameServer(boolean ng_terminate, boolean set_player_name, int max_turn) {
 		this.NG_TERMINATE = ng_terminate;
@@ -135,28 +136,35 @@ public class GameServer {
 	 */
 	public boolean parse(String mesg, int pid) {
 		System.out.println("receive: " + mesg);
-		getLogFile().println("player=" + pid + "," + mesg);
+    if(!SET_PLAYER_NAME){
+		  getLogFile().println("player=" + pid + "," + mesg);
+    } else if(state != STATE.WAIT_FOR_INITIALIZATION) {
+		  getLogFile().println("player=" + pid + "," + mesg);
+    }
 		boolean flag = false;
     Matcher m, n;
-    String[] ary;
 		lastTakenItem = null;
 		if (state == STATE.WAIT_FOR_INITIALIZATION) {
       if (SET_PLAYER_NAME) {
-        String ary[] = mesg.split(',');
+        String ary[] = mesg.split(",");
         m = SET_COMMAND.matcher(ary[0]);
-        n = SET_COMMAND.matcher(ary[1]);
+        n = SET_NAME.matcher(ary[1]);
         if(n.matches()){
           setName(n.group(1), pid);
         }
       } else {
 			  m = SET_COMMAND.matcher(mesg);
       }
-			// Matcher m = SET_COMMAND.matcher(mesg);
 			if (m.matches() && m.group(1).length() == 4 && init_flags[pid] == false) {
 				board.getPlayer(pid).setItemsColor("ABCDEFGH", ItemColor.BLUE); // clear
 				board.getPlayer(pid).setItemsColor(m.group(1).toUpperCase(), ItemColor.RED);
+        set_red_mesg[pid] = m.group(1);
 				init_flags[pid] = true;
 				if (init_flags[0] && init_flags[1]) {
+          if(SET_PLAYER_NAME) {
+		        getLogFile().println("player=0,SET:" + set_red_mesg[0]);
+		        getLogFile().println("player=1,SET:" + set_red_mesg[1]);
+          }
 					state = STATE.WAIT_FOR_PLAYER_0;
 				}
 				flag = true;
@@ -165,7 +173,7 @@ public class GameServer {
 				flag = false;
 			}
 		} else if ((state == STATE.WAIT_FOR_PLAYER_0 && pid == 0) || (state == STATE.WAIT_FOR_PLAYER_1 && pid == 1)) {
-			Matcher m = MOVE_COMMAND.matcher(mesg);
+			m = MOVE_COMMAND.matcher(mesg);
 			if (m.matches()) {
 				char k = m.group(1).toUpperCase().charAt(0);
 				Direction d = Direction.dir(m.group(2).toUpperCase());

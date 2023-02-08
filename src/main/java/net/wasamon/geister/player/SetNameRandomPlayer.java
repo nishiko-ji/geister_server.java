@@ -9,7 +9,6 @@ public class SetNameRandomPlayer extends BasePlayer {
     public static void main(String[] args) throws Exception {
         SetNameRandomPlayer p = new SetNameRandomPlayer();
         p.init(args[0], Integer.parseInt(args[1]));
-        // System.out.println(p.setRedItems("BCDE"));
         System.out.println(p.setRedItemsAndName("BCDE", "SetNameRandomPlayer"));
         Random r = new Random(Calendar.getInstance().getTimeInMillis());
         Direction[] dirs = new Direction[] { Direction.NORTH, Direction.EAST, Direction.WEST, Direction.SOUTH };

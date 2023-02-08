@@ -47,7 +47,6 @@ public class TCPServerWithBlock {
 	}
 
 	public void start() throws IOException{
-		UIWebSocketServer.setName("Name0:" + server.getName(0) + ",Name1:" + server.getName(1)); // as global viewer mode
 		players[0] = new ServerThread(server, Constant.PLAYER_1st_PORT, budget);
 		players[1] = new ServerThread(server, Constant.PLAYER_2nd_PORT, budget);
 		players[0].start();
@@ -271,6 +270,7 @@ public class TCPServerWithBlock {
 					stateLabel = winner == 0 ? "WI0:" : "WI1:";
 				}
 			}
+		  UIWebSocketServer.setName("Name0:" + game.getName(0) + ",Name1:" + game.getName(1)); // as global viewer mode
 			UIWebSocketServer.setMesg(stateLabel + game.getEncodedBoard(1, true)); // as global viewer mode
 		
 			return result;

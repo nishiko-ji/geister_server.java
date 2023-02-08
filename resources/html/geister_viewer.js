@@ -114,37 +114,6 @@
         $('#player_name0').html(player_name0);
         $('#player_name1').text('');
         $('#player_name1').html(player_name1);
-        // [msg, mochi_jikan, byo_yomi, player_name0, player_name1] = msg.split(',');
-        // player_name0 = player_name0.slice(6);
-        // player_name1 = player_name1.slice(6);
-        // mochi_jikan = mochi_jikan.slice(3);
-        // byo_yomi = byo_yomi.slice(3);
-        // if (msg.slice(0, 3) === "MV0") {
-        //   $('#mochi_jikan0').text('');
-        //   $('#mochi_jikan0').html(mochi_jikan);
-        //   $('#byo_yomi0').text('');
-        //   $('#byo_yomi0').html(byo_yomi);
-        // }
-        // else if (msg.slice(0, 3) === "MV1") {
-        //   $('#mochi_jikan1').text('');
-        //   $('#mochi_jikan1').html(mochi_jikan);
-        //   $('#byo_yomi1').text('');
-        //   $('#byo_yomi1').html(byo_yomi);
-        // }
-        // else {
-        //   $('#player_name0').text('');
-        //   $('#player_name0').html(player_name0);
-        //   $('#player_name1').text('');
-        //   $('#player_name1').html(player_name1);
-        //   $('#mochi_jikan0').text('');
-        //   $('#mochi_jikan0').html(mochi_jikan);
-        //   $('#mochi_jikan1').text('');
-        //   $('#mochi_jikan1').html(mochi_jikan);
-        //   $('#byo_yomi0').text('');
-        //   $('#byo_yomi0').html(byo_yomi);
-        //   $('#byo_yomi1').text('');
-        //   $('#byo_yomi1').html(byo_yomi);
-        // }
 
         if (this.prevMesg !== "" && this.prevMesg !== msg && msg.slice(0, 3) === "MV0") {
           this.turnPlayer = 1;

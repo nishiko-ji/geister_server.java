@@ -12,25 +12,37 @@
       }
     .player_info{
     display: flex;
-    border: solid 1px black;
+    width: 470px;
     padding: 5px;
+    }
+    .pl0{
+    justify-content: flex-start;
+    }
+    .pl1{
+    justify-content: flex-end;
     }
     .box{
     border: solid 1px black;
     vertical-align: middle;
     text-align: center;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
     }
     .player_name{
-    background-color: dodgerblue;
+    border: solid 1px black;
+    vertical-align: middle;
+    background-color: #C8C8C8;
+    text-align: center;
+    width: 200px;
+    height: 30px;
+    line-height: 30px;
     }
     .mochi_jikan{
-    background-color: lawngreen;
+    background-color: #CCECCC;
     }
     .byo_yomi{
-    background-color: blueviolet;
+    background-color: #DD6673;
     }
     </style>
     <!--<script src="jquery-2.1.4.min.js"></script>-->
@@ -41,19 +53,20 @@
     <link rel="stylesheet" href="jquery.alerts.css" type="text/css" />  </head>
   <body>
     <!-- <span id="time"></span> -->
-    <div class="player_info">
+    <div class="pl0 player_info">
       <div class="box mochi_jikan" id="mochi_jikan0"></div>
       <div class="box byo_yomi" id="byo_yomi0"></div>
+      <div class="player_name" id="player_name0"></div>
     </div>
-    <div class="player_name" id="player_name0"></div>
+    <!-- <div class="player_name" id="player_name0"></div> -->
     <canvas id="gameboard"></canvas>
-    <input type="checkbox" id="hidden" value="hidden" checked>Hidden Mode</input>
-    <br>
-    <div class="player_name" id="player_name1"></div>
-    <div class="player_info">
+    <!-- <div class="player_name" id="player_name1"></div> -->
+    <div class="pl1 player_info">
+      <div class="player_name" id="player_name1"></div>
       <div class="box mochi_jikan" id="mochi_jikan1"></div>
       <div class="box byo_yomi" id="byo_yomi1"></div>
     </div>
+    <input type="checkbox" id="hidden" value="hidden" checked>Hidden Mode</input>
     <br>
     <span id="message"></span>
     <script type="text/javascript">

@@ -134,7 +134,7 @@ public abstract class BasePlayer {
 		if(keys.length() != 4){
 			return false;
 		}
-		send("SET:" + keys + ",Name:" + name + "\r\n");
+		send("SET:" + keys + ",NAME:" + name + "\r\n");
 		return !isFailed(recv());
     }
 
