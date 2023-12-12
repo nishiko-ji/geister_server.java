@@ -55,6 +55,10 @@ public class GameServer {
 	    }
 	}
 
+  public int getTurn() {
+    return turn_counter;
+  }
+
 	public int getWinner() {
 		return winner;
 	}

@@ -19,6 +19,8 @@ public class UIWebSocketServer {
 	public static String mesg = "null";
 	public static String time = "null,null,null,null";
 	public static String name = "null,null";
+  public static String result = "null,null,null";
+  public static String turn = "null";
 	
 	synchronized static void setMesg(String mesg){
 		UIWebSocketServer.mesg = mesg;
@@ -32,6 +34,14 @@ public class UIWebSocketServer {
 		UIWebSocketServer.name = name;
 	}
 
+  synchronized static void setResult(String result){
+    UIWebSocketServer.result = result;
+  }
+
+  synchronized static void setTurn(String turn){
+    UIWebSocketServer.turn = turn;
+  }
+
 	synchronized static String getMesg(){
 		return UIWebSocketServer.mesg;
 	}
@@ -43,6 +53,14 @@ public class UIWebSocketServer {
 	synchronized static String getName(){
 		return UIWebSocketServer.name;
 	}
+
+  synchronized static String getResult(){
+    return UIWebSocketServer.result;
+  }
+
+  synchronized static String getTurn(){
+    return UIWebSocketServer.turn;
+  }
 
 	static {
 		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -64,7 +82,7 @@ public class UIWebSocketServer {
 		String time = getTime();
 		String name = getName();
 		sessions.forEach(session -> {
-            session.getAsyncRemote().sendText(mesg + ',' + time + ',' + name);
+            session.getAsyncRemote().sendText(mesg + ',' + time + ',' + name + ',' + result + ',' + turn);
 		});
 	}
 }

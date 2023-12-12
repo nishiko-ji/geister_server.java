@@ -33,6 +33,8 @@ public class TCPServerWithBlock {
 	
 	private final int budget;
 
+  private static int battle_times = 0; // multi_battle
+
 	public TCPServerWithBlock(GameServer server, int budget){
 		this.server = server;
 		this.budget = budget;
@@ -272,6 +274,7 @@ public class TCPServerWithBlock {
 			}
 		  UIWebSocketServer.setName("Name0:" + game.getName(0) + ",Name1:" + game.getName(1)); // as global viewer mode
 			UIWebSocketServer.setMesg(stateLabel + game.getEncodedBoard(1, true)); // as global viewer mode
+      UIWebSocketServer.setTurn("Turn:" + game.getTurn());
 		
 			return result;
 		}
@@ -373,7 +376,7 @@ public class TCPServerWithBlock {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("TCPSrverWithBlock");
-		GetOpt opt = new GetOpt("", "no_ng_terminate,set_player_name_server,set_player_name_client,timeout:,budget:,wait:,max-turn:", args);
+		GetOpt opt = new GetOpt("", "no_ng_terminate,set_player_name_server,set_player_name_client,timeout:,budget:,wait:,max-turn:,battle-times:", args);
 		boolean ng_terminate = !opt.flag("no_ng_terminate");
 
     boolean set_player_name_server = opt.flag("set_player_name_server");
@@ -397,6 +400,9 @@ public class TCPServerWithBlock {
 		if(opt.flag("wait")){
 			waitViewerTime = Integer.parseInt(opt.getValue("wait"));
 		}
+    if(opt.flag("battle-times")){
+      battle_times = Integer.parseInt(opt.getValue("battle-times"));
+    }
 		System.out.println("set_player_name_server = " + set_player_name_server);
 		System.out.println("set_player_name_client = " + set_player_name_client);
 		System.out.println("Budget = " + budget + " sec.");
@@ -413,10 +419,41 @@ public class TCPServerWithBlock {
         n = illegalFileNamePattern.matcher(n).replaceAll("-");
         s.server.setName(n, 1);
       }
-      s.server.init();
-			s.start();
-			s.close();
-			s.server.close();
+
+		  UIWebSocketServer.setResult("win:" + 0 + ",lose:" + 0 + ",draw:" + 0); // as global viewer mode
+      // --multi_battle用追加--
+      if(battle_times==0){
+        s.server.init();
+			  s.start();
+			  s.close();
+			  s.server.close();
+      }
+      else{
+      // int num = 3;  // とりあえず5戦
+      // 対戦結果保持
+        int win = 0;
+        int lose = 0;
+        int draw = 0;
+        for(int i = 0; i < battle_times; i++) {
+          s.server.init();
+          s.start();
+          switch(s.server.getWinner()){
+            case 0:
+              win++;
+              break;
+            case 1:
+              lose++;
+              break;
+            case 2:
+              draw++;
+              break;
+          }
+          System.out.println("------ RESULT (win, lose, draw) = ("+win+", "+lose+", "+draw+")------");
+          s.close();
+          s.server.close();
+		      UIWebSocketServer.setResult("win:" + win + ",lose:" + lose + ",draw:" + draw); // as global viewer mode
+        }
+      }
 		}
 	}
 

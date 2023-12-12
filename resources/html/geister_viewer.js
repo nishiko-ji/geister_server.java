@@ -86,7 +86,7 @@
 
       update_info(e) {
         var c, column, escape_player, i, info, item, j, k, l, m, msg, ref, ref1, row, state, taken_1st, taken_2nd, x, y;
-        var mochi_jikan, mochi_jikan0, mochi_jikan1, byo_yomi, byo_yomi0, byo_yomi1, player_name0, player_name1;
+        var mochi_jikan, mochi_jikan0, mochi_jikan1, byo_yomi, byo_yomi0, byo_yomi1, player_name0, player_name1, win, lose, draw, turn;
         msg = e.data;
         console.log(msg);
         $('#message').text(msg);
@@ -95,13 +95,17 @@
         }
         // æ™‚é–“ã‚’å—ä¿¡ã—ãŸå ´åˆï¼Žå—ä¿¡ã™ã‚‹æ–‡å­—åˆ—å½¢å¼ã¯ "TIME,MT:(æŒã¡æ™‚é–“),BY:(ç§’èª­ã¿)"
         // ã¨ã‚Šã‚ãˆãšè¡¨ç¤ºã ã‘
-        [msg, mochi_jikan0, mochi_jikan1, byo_yomi0, byo_yomi1, player_name0, player_name1] = msg.split(',');
+        [msg, mochi_jikan0, mochi_jikan1, byo_yomi0, byo_yomi1, player_name0, player_name1, win, lose, draw, turn] = msg.split(',');
         mochi_jikan0 = mochi_jikan0.slice(4);
         mochi_jikan1 = mochi_jikan1.slice(4);
         byo_yomi0 = byo_yomi0.slice(4);
         byo_yomi1 = byo_yomi1.slice(4);
         player_name0 = player_name0.slice(6);
         player_name1 = player_name1.slice(6);
+        win = win.slice(4);
+        lose = lose.slice(5);
+        draw = draw.slice(5);
+        turn = turn.slice(5);
         $('#mochi_jikan0').text('');
         $('#mochi_jikan0').html(mochi_jikan0);
         $('#mochi_jikan1').text('');
@@ -114,6 +118,14 @@
         $('#player_name0').html(player_name0);
         $('#player_name1').text('');
         $('#player_name1').html(player_name1);
+        $('#win').text('');
+        $('#win').html(win);
+        $('#lose').text('');
+        $('#lose').html(lose);
+        $('#draw').text('');
+        $('#draw').html(draw);
+        $('#turn').text('');
+        $('#turn').html(turn);
 
         if (this.prevMesg !== "" && this.prevMesg !== msg && msg.slice(0, 3) === "MV0") {
           this.turnPlayer = 1;
