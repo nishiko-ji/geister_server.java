@@ -3,19 +3,28 @@
 大会と同じ設定でサーバーを起動するには...
 
     java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=1000
-    
+
+大会時は "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
+
+サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
+
 複数回対戦時は...
 
-    java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=500 --battle-times=3
-        
-大会時は "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
-サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
+    java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=200 --battle-times=50
+
+"--battle-times"で指定回数の対戦を行ったのち，先後切り替えを行い，指定回数の対戦を行います．
+
+複数回対戦は"--set_player_name_server"オプションを使う前提で実装したため，"--set_player_name_server"なしでは正しく動作しない可能性があります．
 
 複数回対戦のルールはまだ決まっていません．"--budget", "--timeout", "--wait", "--battle-times"は適当な数値になっています．
 
+先後切り替えは，サーバー側のプレイヤー名や，対戦結果を自動で切り替えるもので，AIの接続を自動で切り替えるものではありません．
+
+AIはサーバーの先後切り替えのタイミングで接続するポートを変える必要があります．
+
 複数回対戦時の接続はmulti_battle.shを参考にしてください．自動で先後切り替えができるようになっています．
 
-    bash multi_battle.sh 127.0.0.1 10000 2
+    bash multi_battle.sh 127.0.0.1 10000 10
 
 ## 元サーバーとの変更点
 - サーバー側でプレイヤー名を設定できる
