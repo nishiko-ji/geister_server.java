@@ -102,7 +102,14 @@
         byo_yomi1 = byo_yomi1.slice(4);
         player_name0 = player_name0.slice(6);
         player_name1 = player_name1.slice(6);
+        win0 = win0.slice(5);
+        lose0 = lose0.slice(6);
+        draw0 = draw0.slice(6);
+        win1 = win1.slice(5);
+        lose1 = lose1.slice(6);
+        draw1 = draw1.slice(6);
         turn = turn.slice(5);
+        ch = ch.slice(3);
         $('#mochi_jikan0').text('');
         $('#mochi_jikan0').html(mochi_jikan0);
         $('#mochi_jikan1').text('');
@@ -115,8 +122,39 @@
         $('#player_name0').html(player_name0);
         $('#player_name1').text('');
         $('#player_name1').html(player_name1);
+        $('#win0').text('');
+        $('#win0').html(win0);
+        $('#lose0').text('');
+        $('#lose0').html(lose0);
+        $('#draw0').text('');
+        $('#draw0').html(draw0);
+        $('#win1').text('');
+        $('#win1').html(win1);
+        $('#lose1').text('');
+        $('#lose1').html(lose1);
+        $('#draw1').text('');
+        $('#draw1').html(draw1);
         $('#turn').text('');
         $('#turn').html(turn);
+        if(ch == '0'){
+          $('#res00').text('');
+          $('#res00').html("先手勝数");
+          $('#res10').text('');
+          $('#res10').html("後手勝数");
+          $('#res01').text('');
+          $('#res01').html("後手勝数");
+          $('#res11').text('');
+          $('#res11').html("先手勝数");
+        }else{
+          $('#res00').text('');
+          $('#res00').html("後手勝数");
+          $('#res10').text('');
+          $('#res10').html("先手勝数");
+          $('#res01').text('');
+          $('#res01').html("先手勝数");
+          $('#res11').text('');
+          $('#res11').html("後手勝数");
+        }
 
         if (this.prevMesg !== "" && this.prevMesg !== msg && msg.slice(0, 3) === "MV0") {
           this.turnPlayer = 1;
@@ -180,15 +218,15 @@
         $('#message').text('');
         $('#message').html(info);
         this.drawBoard();
-        if (state === "WI0" && this.state !== "WI0") {
-          jAlert('1st player won', 'Game set');
-        }
-        if (state === "WI1" && this.state !== "WI1") {
-          jAlert('2nd player won', 'Game set');
-        }
-        if (state === "DRW" && this.state !== "DRW") {
-          jAlert('Draw', 'Game set');
-        }
+        // if (state === "WI0" && this.state !== "WI0") {
+        //   jAlert('1st player won', 'Game set');
+        // }
+        // if (state === "WI1" && this.state !== "WI1") {
+        //   jAlert('2nd player won', 'Game set');
+        // }
+        // if (state === "DRW" && this.state !== "DRW") {
+        //   jAlert('Draw', 'Game set');
+        // }
         return this.state = state;
       }
 

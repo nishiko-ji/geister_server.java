@@ -76,7 +76,7 @@
     </style>
     <!--<script src="jquery-2.1.4.min.js"></script>-->
     <script src="jquery.js"></script>
-    <script src="geister_viewer.js"></script>
+    <script src="geister_viewer_multi.js"></script>
     <script type="text/javascript" src="jquery.alerts.js"></script>
     <script type="text/javascript" src="jquery.ui.draggable.js"></script>
     <link rel="stylesheet" href="jquery.alerts.css" type="text/css" />  </head>
@@ -84,11 +84,16 @@
     <!-- <span id="time"></span> -->
     <div>
       <div class="inline_div pl">
-        <div class="result">
-          <div class="height2">先手勝数</div>
-          <div class="height1" id='win'></div>
-        </div>
+        <div class="height2">先手</div>
         <div class="height1" id="player_name0"></div>
+        <div class="result">
+          <div class="height2" id="res00">先手勝数</div>
+          <div class="height1" id='win0'></div>
+        </div>
+        <div class="result">
+          <div class="height2" id="res10">後手勝数</div>
+          <div class="height1" id='win1'></div>
+        </div>
         <div class="inline_div time">
           <div class="height2">持ち時間</div>
           <div class="height1" id="mochi_jikan0"></div>
@@ -97,19 +102,29 @@
           <div class="height1" id="byo_yomi0"></div>
         </div>
       </div><div class="inline_div other">
+        <div class="height2"></div>
+        <div class="height1"></div>
         <div class="result">
           <div class="height2">引分数</div>
-          <div class="height1" id="draw"></div>
+          <div class="height1" id="draw0"></div>
         </div>
-        <div class="height1"></div>
+        <div class="result">
+          <div class="height2">引分数</div>
+          <div class="height1" id="draw1"></div>
+        </div>
         <div class="height2">手数</div>
         <div class="height1" id="turn"></div>
       </div><div class="inline_div pl">
-        <div class="result">
-          <div class="height2">後手勝数</div>
-          <div class="height1" id="lose"></div>
-        </div>
+        <div class="height2">後手</div>
         <div class="height1" id="player_name1"></div>
+        <div class="result">
+          <div class="height2" id="res01">後手勝数</div>
+          <div class="height1" id="lose0"></div>
+        </div>
+        <div class="result">
+          <div class="height2" id="res11">先手勝数</div>
+          <div class="height1" id="lose1"></div>
+        </div>
         <div class="inline_div time">
           <div class="height2">持ち時間</div>
           <div class="height1" id="mochi_jikan1"></div>

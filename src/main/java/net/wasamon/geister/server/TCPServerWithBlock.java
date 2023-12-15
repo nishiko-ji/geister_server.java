@@ -383,6 +383,7 @@ public class TCPServerWithBlock {
     boolean set_player_name_client = opt.flag("set_player_name_client");
     Scanner scanner = new Scanner(System.in);
     String n;
+    String n0="", n1="";
     Pattern illegalFileNamePattern = Pattern.compile("\\\\|/|:|\\*|\\?|\"|<|>|\\|");
 
 		int budget = 10*60; // 10min.
@@ -413,14 +414,17 @@ public class TCPServerWithBlock {
         System.out.print("SET PLAYER_0 NAME > ");
         n = scanner.nextLine();
         n = illegalFileNamePattern.matcher(n).replaceAll("-");
+        n0 = n;
         s.server.setName(n, 0);
         System.out.print("SET PLAYER_1 NAME > ");
         n = scanner.nextLine();
         n = illegalFileNamePattern.matcher(n).replaceAll("-");
+        n1 = n;
         s.server.setName(n, 1);
       }
 
-		  UIWebSocketServer.setResult("win:" + 0 + ",lose:" + 0 + ",draw:" + 0); // as global viewer mode
+		  // UIWebSocketServer.setResult("win:" + 0 + ",lose:" + 0 + ",draw:" + 0); // as global viewer mode
+		  UIWebSocketServer.setResult("win0:" + 0 + ",lose0:" + 0 + ",draw0:" + 0 + ",win1:" + 0 + ",lose1:" + 0 + ",draw1:" + 0); // as global viewer mode
       // --multi_battle用追加--
       if(battle_times==0){
         s.server.init();
@@ -431,27 +435,60 @@ public class TCPServerWithBlock {
       else{
       // int num = 3;  // とりあえず5戦
       // 対戦結果保持
-        int win = 0;
-        int lose = 0;
-        int draw = 0;
-        for(int i = 0; i < battle_times; i++) {
-          s.server.init();
-          s.start();
-          switch(s.server.getWinner()){
-            case 0:
-              win++;
-              break;
-            case 1:
-              lose++;
-              break;
-            case 2:
-              draw++;
-              break;
+        int win0 = 0;
+        int lose0 = 0;
+        int draw0 = 0;
+        int win1 = 0;
+        int lose1 = 0;
+        int draw1 = 0;
+        for(int ch = 0; ch < 2; ch++){
+          UIWebSocketServer.setCh("ch:"+ch);
+          if(ch==1){
+            System.out.println("------先後入れ替え------");
+            s.server.setName(n0, 1);
+            s.server.setName(n1, 0);
+		        UIWebSocketServer.setResult("win0:" + lose0 + ",lose0:" + win0 + ",draw0:" + draw0 + ",win1:" + win1 + ",lose1:" + lose1 + ",draw1:" + draw1); // as global viewer mode
+		        UIWebSocketServer.setName("Name0:" + s.server.getName(0) + ",Name1:" + s.server.getName(1)); // as global viewer mode
           }
-          System.out.println("------ RESULT (win, lose, draw) = ("+win+", "+lose+", "+draw+")------");
-          s.close();
-          s.server.close();
-		      UIWebSocketServer.setResult("win:" + win + ",lose:" + lose + ",draw:" + draw); // as global viewer mode
+          for(int i = 0; i < battle_times; i++) {
+            s.server.init();
+            s.start();
+            if(ch == 0){
+              switch(s.server.getWinner()){
+                case 0:
+                  win0++;
+                  break;
+                case 1:
+                  lose0++;
+                  break;
+                case 2:
+                  draw0++;
+                  break;
+              }
+		          UIWebSocketServer.setResult("win0:" + win0 + ",lose0:" + lose0 + ",draw0:" + draw0 + ",win1:" + lose1 + ",lose1:" + win1 + ",draw1:" + draw1); // as global viewer mode
+            }
+            else{
+              switch(s.server.getWinner()){
+                case 0:
+                  win1++;
+                  break;
+                case 1:
+                  lose1++;
+                  break;
+                case 2:
+                  draw1++;
+                  break;
+              }
+		          UIWebSocketServer.setResult("win0:" + lose0 + ",lose0:" + win0 + ",draw0:" + draw0 + ",win1:" + win1 + ",lose1:" + lose1 + ",draw1:" + draw1); // as global viewer mode
+            }
+            // System.out.println("------ RESULT (win, lose, draw) = ("+win+", "+lose+", "+draw+")------");
+            System.out.println("------ RESULT (win0, lose0, draw0) = ("+win0+", "+lose0+", "+draw0+")------");
+            System.out.println("------ RESULT (win1, lose1, draw1) = ("+win1+", "+lose1+", "+draw1+")------");
+            s.close();
+            s.server.close();
+		        // UIWebSocketServer.setResult("win:" + win + ",lose:" + lose + ",draw:" + draw); // as global viewer mode
+		        // UIWebSocketServer.setResult("win0:" + win0 + ",lose0:" + lose0 + ",draw0:" + draw0 + ",win1:" + win1 + ",lose1:" + lose1 + ",draw1:" + draw1); // as global viewer mode
+          }
         }
       }
 		}
