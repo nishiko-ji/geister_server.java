@@ -4,25 +4,20 @@
 
     java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=1000
 
-大会時は "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
-
-サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
+- 大会時は "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
+- サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
 
 複数回対戦時は...
 
-    java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=200 --battle-times=50
+    java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=200 --battle-times=10
 
-"--battle-times"で指定回数の対戦を行ったのち，先後切り替えを行い，指定回数の対戦を行います．
-
-複数回対戦は"--set_player_name_server"オプションを使う前提で実装したため，"--set_player_name_server"なしでは正しく動作しない可能性があります．
-
-複数回対戦のルールはまだ決まっていません．"--budget", "--timeout", "--wait", "--battle-times"は適当な数値になっています．
-
-この場合だと50回対戦したのち，先後入れ替えで50回対戦します．
-
-先後入れ替えでは，サーバー側のプレイヤー名などの情報が入れ替わります．
-
-接続するAIのポートが自動で切り替わるわけではないので，サーバーの先後入れ替えのタイミングでAI側も接続するポートを変える必要があります．
+- "--battle-times"で指定回数の対戦を行ったのち，先後切り替えを行い，指定回数の対戦を行います．
+- 複数回対戦は"--set_player_name_server"オプションを使う前提で実装したため，"--set_player_name_server"なしでは正しく動作しない可能性があります．
+- 複数回対戦のルールはまだ決まっていません．"--budget", "--timeout", "--wait", "--battle-times"は適当な数値になっています．
+- この場合だと10回対戦したのち，先後入れ替えで10回対戦します．
+- 先後入れ替えでは，サーバー側のプレイヤー名などの情報が入れ替わります．
+- 接続するAIのポートが自動で切り替わるわけではないので，サーバーの先後入れ替えのタイミングでAI側も接続するポートを変える必要があります．
+- AIの接続ポート変更はmulti_battle.shを参考にするとよいかもしれません．
 
 multi_battle.shはランダムプレイヤーの複数回対戦時の接続スクリプトです．
 
