@@ -2,7 +2,11 @@
 ガイスターAI大会用にサーバーを改良しました．
 大会と同じ設定でサーバーを起動するには...
 
-        java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=1000
+    java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=1000
+    
+複数回対戦時は...
+
+    java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=500 --battle-times=3
         
 大会時は恐らく "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
 サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
@@ -11,7 +15,9 @@
 - サーバー側でプレイヤー名を設定できる
 - クライアント側でプレイヤー名を設定できる
 - ログ名にプレイヤー名を追加する
-- プレイヤー名，残り時間をviewer.htmlで見られる
+- プレイヤー名，残り時間，手数をviewer.htmlで見られる
+- 対戦回数指定ができる．
+- viewer_multi.htmlで対戦結果が表示される．
 
 ## 元サーバーとの変更点（詳細）
 ### サーバー側でプレイヤー名を設定できる
@@ -26,12 +32,17 @@
 ### ログ名にプレイヤー名を追加する
 - ログ名にプレイヤー名がつくようになり，大会時の対戦管理が容易になる．
 ### プレイヤー名，残り時間をviewer.htmlで見られる
-- viewer.htmlにプレイヤー名，残り時間が表示されるようになった．
-- 緑四角が持ち時間（--budget），赤四角が秒読み（--timeout），灰色四角がプレイヤー名.
+- viewer.htmlにプレイヤー名，持ち時間，秒読み，手数が表示されるようになった．
 
+![viewer.htmlの時間，プレイヤー名表示](./misc/time_and_name2.png)
 
-![viewer.htmlの時間，プレイヤー名表示](./misc/time_and_name.png)
+### 対戦回数指定ができる
+- サーバー起動時にオプション "--battle-times=3" をつけるとサーバー側の対戦回数が指定できる．(この場合は3回対戦)
+- 同じAI名での対戦が指定した回数分行える．
+### viewer_multi.htmlで対戦結果が表示される．
+- viewer_multi.htmlに"--battle-times"で指定した対戦回数分の対戦結果が表示されるようになった．
 
+![viewer_multi.htmlの時間，プレイヤー名表示](./misc/result.png)
 
 # geister_server (Java version)
 
