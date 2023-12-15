@@ -8,8 +8,14 @@
 
     java -jar build/libs/geister.jar --set_player_name_server --budget=600 --timeout=10 --wait=500 --battle-times=3
         
-大会時は恐らく "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
+大会時は "--set_player_name_server" オプションを使ってプレイヤー名を設定するため，クライアント側が大会のために接続方法を変更する必要はありません．
 サーバー側は，対戦ごとにプレイヤー名を設定する必要があります．
+
+複数回対戦のルールはまだ決まっていません．"--budget", "--timeout", "--wait", "--battle-times"は適当な数値になっています．
+
+複数回対戦時の接続はmulti_battle.shを参考にしてください．自動で先後切り替えができるようになっています．
+
+    bash multi_battle.sh 127.0.0.1 10000 2
 
 ## 元サーバーとの変更点
 - サーバー側でプレイヤー名を設定できる
@@ -39,6 +45,7 @@
 ### 対戦回数指定ができる
 - サーバー起動時にオプション "--battle-times=3" をつけるとサーバー側の対戦回数が指定できる．(この場合は3回対戦)
 - 同じAI名での対戦が指定した回数分行える．
+- "--set_player_name_server"を利用しているときに使う前提で作成したため，"--set_player_name_server"を指定していないときは正しく動作しない可能性があります．
 ### viewer_multi.htmlで対戦結果が表示される．
 - viewer_multi.htmlに"--battle-times"で指定した対戦回数分の対戦結果が表示されるようになった．
 
